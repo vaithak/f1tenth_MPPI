@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 class mppi_config:
     NXK: int = 4  # length of kinematic state vector: z = [x, y, v, yaw]
     NU: int = 2  # length of input vector: u = = [steering speed, acceleration]
-    TK: int = 8  # finite time horizon length kinematic
+    TK: int = 3  # finite time horizon length kinematic
     N_ITERATIONS: int = 1  # number of iterations for MPPI
 
     # ---------------------------------------------------
