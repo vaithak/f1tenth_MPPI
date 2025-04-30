@@ -38,6 +38,9 @@ class MPPI_node(Node):
         super().__init__('mppi_node')
         print("MPPI Node Initialized")
 
+        import os
+        cwd = os.getcwd()
+
         self.declare_parameters(
             namespace='',
             parameters=[
@@ -50,7 +53,7 @@ class MPPI_node(Node):
                 ('max_steering_angle', 0.5),
                 ('max_speed', 2.0),
                 ('goal_tolerance', 0.1),
-                ('waypoint_file', '/home/vaithak/Downloads/UPenn/F1Tenth/sim_ws/src/f1tenth_Shield_MPPI/waypoints/levine-practise-lane-optimal.csv'),
+                ('waypoint_file', f'{cwd}/src/f1tenth_Shield_MPPI/waypoints/levine-practise-lane-optimal.csv'),
             ]
         )
         qos = rclpy.qos.QoSProfile(history=rclpy.qos.QoSHistoryPolicy.KEEP_LAST,
