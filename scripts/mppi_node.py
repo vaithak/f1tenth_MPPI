@@ -17,7 +17,8 @@ from std_msgs.msg import Float32MultiArray, MultiArrayDimension
 from functools import partial
 from f1tenth_shield_mppi.mppi_utils import MPPI
 
-
+from nav_msgs.msg import Path
+from geometry_msgs.msg import PoseStamped
 def _numpy_to_multiarray(multiarray_type, np_array):
     multiarray = multiarray_type()
     multiarray.layout.dim = [MultiArrayDimension(label='dim%d' % i,
@@ -53,7 +54,7 @@ class MPPI_node(Node):
                 ('max_steering_angle', 0.5),
                 ('max_speed', 2.0),
                 ('goal_tolerance', 0.1),
-                ('waypoint_file', f'{cwd}/src/f1tenth_Shield_MPPI/waypoints/levine-practise-lane-optimal.csv'),
+                ('waypoint_file', f'{cwd}/src/f1tenth_Shield_MPPI/waypoints/levine_converted.csv'),
             ]
         )
         qos = rclpy.qos.QoSProfile(history=rclpy.qos.QoSHistoryPolicy.KEEP_LAST,
@@ -91,6 +92,8 @@ class MPPI_node(Node):
         self.drive_pub = self.create_publisher(AckermannDriveStamped, '/drive', qos)
         self.reference_pub = self.create_publisher(Float32MultiArray, "/reference_arr", qos)
         self.opt_traj_pub = self.create_publisher(Float32MultiArray, "/opt_traj_arr", qos)
+
+        self.path_pub = self.create_publisher(Path, '/reference_path', qos)
 
         # Environment
         self.env = Environment(waypoint_file=self.waypoint_file)
@@ -137,10 +140,23 @@ class MPPI_node(Node):
         ])
 
         # Calculate reference trajectory
-        # ref_trajectory = self.env.get_refernece_traj(curr_state_jax)
+        # ref_trajectory = self.env.get_reference_traj(curr_state_jax)
         find_waypoint_vel = max(mppi_config.REF_VEL, curr_state.v)
-        ref_trajectory, _ = self.env.get_refernece_traj(curr_state_jax.copy(), find_waypoint_vel, mppi_config.TK)
+        ref_trajectory, _ = self.env.get_reference_traj(curr_state_jax.copy(), find_waypoint_vel, mppi_config.TK)
         print("Ref Trajectory: ", ref_trajectory)
+        path_msg = Path()
+        path_msg.header = msg.header  # reuse your odom header (stamp + frame_id)
+
+        for pt in ref_trajectory:
+            pose = PoseStamped()
+            pose.header = path_msg.header
+            pose.pose.position.x = float(pt[0])
+            pose.pose.position.y = float(pt[1])
+            pose.pose.position.z = 0.0
+            # Orientation isn’t strictly needed for a 2D path, but you could fill yaw if you want.
+            path_msg.poses.append(pose)
+
+        self.path_pub.publish(path_msg) 
 
         # Compute control
         self.compute_control(curr_state_jax, ref_trajectory)

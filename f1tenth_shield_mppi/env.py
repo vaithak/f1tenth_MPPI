@@ -107,17 +107,17 @@ class Environment:
         Returns the column numbers for the waypoints.
         """
         return {
-            "x_ref_m": 0,
-            "y_ref_m": 1,
-            "width_right_m": 2,
-            "width_left_m": 3,
+            "x_ref_m": 2,
+            "y_ref_m": 3,
+            "width_right_m": 7,
+            "width_left_m": 8,
             "x_normvec_m": 4,
             "y_normvec_m": 5,
             "alpha_m": 6,
-            "s_racetraj_m": 7,
-            "psi_racetraj_rad": 8,
+            "s_racetraj_m": 0,
+            "psi_racetraj_rad": 3,
             "kappa_racetraj_radpm": 9,
-            "vx_racetraj_mps": 10,
+            "vx_racetraj_mps": 5,
             "ax_racetraj_mps2": 11
         }
 
@@ -197,7 +197,7 @@ class Environment:
         # return 20*xy_cost + 15*vel_cost + 1*yaw_cost
         return xy_cost
     
-    def get_refernece_traj(self, state, target_speed=None, n_steps=10, vind=5, speed_factor=1.0):
+    def get_reference_traj(self, state, target_speed=None, n_steps=10, vind=5, speed_factor=1.0):
         _, dist, _, _, ind = nearest_point(np.array([state[0], state[1]]), 
                                            self.waypoints[:, (1, 2)].copy())
         
