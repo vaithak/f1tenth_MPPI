@@ -10,12 +10,12 @@ import tf_transformations
 from geometry_msgs.msg import Point, PoseStamped
 from nav_msgs.msg import Odometry
 from ackermann_msgs.msg import AckermannDriveStamped
-from f1tenth_shield_mppi.mppi_utils import Environment, State
-from f1tenth_shield_mppi.jax_utils import numpify
-from f1tenth_shield_mppi.mppi_config import mppi_config
+from f1tenth_mppi.mppi_utils import Environment, State
+from f1tenth_mppi.jax_utils import numpify
+from f1tenth_mppi.mppi_config import mppi_config
 from std_msgs.msg import Float32MultiArray, MultiArrayDimension
 from functools import partial
-from f1tenth_shield_mppi.mppi_utils import MPPI
+from f1tenth_mppi.mppi_utils import MPPI
 
 from nav_msgs.msg import Path
 from geometry_msgs.msg import PoseStamped
@@ -54,7 +54,7 @@ class MPPI_node(Node):
                 ('max_steering_angle', 0.5),
                 ('max_speed', 2.0),
                 ('goal_tolerance', 0.1),
-                ('waypoint_file', f'{cwd}/src/f1tenth_Shield_MPPI/waypoints/levine_converted.csv'),
+                ('waypoint_file', f'{cwd}/src/f1tenth_MPPI/waypoints/levine_converted.csv'),
             ]
         )
         qos = rclpy.qos.QoSProfile(history=rclpy.qos.QoSHistoryPolicy.KEEP_LAST,

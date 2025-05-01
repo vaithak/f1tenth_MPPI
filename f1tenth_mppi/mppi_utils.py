@@ -3,11 +3,11 @@ from dataclasses import dataclass, field
 import jax
 import jax.numpy as jnp
 from functools import partial
-from f1tenth_shield_mppi import jax_utils
+from f1tenth_mppi import jax_utils
 from numba import njit
-from f1tenth_shield_mppi.jax_dynamics_models import vehicle_dynamics_ks, vehicle_dynamics_st
-from f1tenth_shield_mppi.mppi_config import mppi_config
-from f1tenth_shield_mppi.env import Environment
+from f1tenth_mppi.jax_dynamics_models import vehicle_dynamics_ks, vehicle_dynamics_st
+from f1tenth_mppi.mppi_config import mppi_config
+from f1tenth_mppi.env import Environment
 
 
 @dataclass
